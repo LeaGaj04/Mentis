@@ -2,14 +2,28 @@ import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { createCalendarEvent } from '../../../lib/google-calendar';
 
-export async function GET(request: Request) {
+async function handlePaymentSuccess(request: Request) {
   const { searchParams } = new URL(request.url);
-  // Ventipay suele añadir un identificador a la URL de redirección
-  const checkoutId = searchParams.get('checkout_id') || searchParams.get('id');
+  let checkoutId = searchParams.get('checkout_id') || searchParams.get('id');
+
+  if (request.method === 'POST') {
+    try {
+      const contentType = request.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        const body = await request.json();
+        checkoutId = checkoutId || body.id || body.checkout_id;
+      } else if (contentType.includes('application/x-www-form-urlencoded') || contentType.includes('multipart/form-data')) {
+        const formData = await request.formData();
+        checkoutId = checkoutId || formData.get('id')?.toString() || formData.get('checkout_id')?.toString();
+      }
+    } catch (e) {
+      console.error("Error leyendo body del POST", e);
+    }
+  }
 
   // Si por alguna razón no viene el ID, redirigimos al inicio con error
   if (!checkoutId) {
-    return NextResponse.redirect(new URL('/agendar?error=missing_checkout', request.url));
+    return NextResponse.redirect(new URL('/agendar?error=missing_checkout', request.url), 303);
   }
 
   try {
@@ -26,12 +40,12 @@ export async function GET(request: Request) {
 
     if (!ventipayRes.ok) {
       console.error("Error obteniendo checkout desde Ventipay:", checkout);
-      return NextResponse.redirect(new URL('/agendar?error=ventipay_error', request.url));
+      return NextResponse.redirect(new URL('/agendar?error=ventipay_error', request.url), 303);
     }
 
     // El estado ideal en VentiPay es 'paid', aunque dependiendo del medio puede ser 'authorized'
     if (checkout.status !== 'paid' && checkout.status !== 'authorized') {
-      return NextResponse.redirect(new URL('/agendar?error=payment_not_completed', request.url));
+      return NextResponse.redirect(new URL('/agendar?error=payment_not_completed', request.url), 303);
     }
 
     // 2. Extraer metadata
@@ -40,7 +54,7 @@ export async function GET(request: Request) {
 
     if (!name || !email) {
        // Falta metadata
-       return NextResponse.redirect(new URL('/agendar?error=missing_metadata', request.url));
+       return NextResponse.redirect(new URL('/agendar?error=missing_metadata', request.url), 303);
     }
 
     // 3. Crear el evento en Google Calendar
@@ -48,7 +62,6 @@ export async function GET(request: Request) {
       await createCalendarEvent({ name, email, phone, reason, date, time });
     } catch (calendarError) {
       console.error('No se pudo crear el evento en el calendario:', calendarError);
-      // Opcional: Podrías enviar un mensaje de alerta a ti mismo si falla
     }
 
     // 4. Enviar el correo de confirmación con Resend
@@ -89,11 +102,19 @@ export async function GET(request: Request) {
       `,
     });
 
-    // 5. Redirigir a la página de éxito para que el paciente vea un mensaje bonito
-    return NextResponse.redirect(new URL('/agendar/exito', request.url));
+    // 5. Redirigir a la página de éxito usando 303 See Other para forzar método GET en el navegador
+    return NextResponse.redirect(new URL('/agendar/exito', request.url), 303);
 
   } catch (error) {
     console.error("Error crítico en payment-success:", error);
-    return NextResponse.redirect(new URL('/agendar?error=server_error', request.url));
+    return NextResponse.redirect(new URL('/agendar?error=server_error', request.url), 303);
   }
+}
+
+export async function GET(request: Request) {
+  return handlePaymentSuccess(request);
+}
+
+export async function POST(request: Request) {
+  return handlePaymentSuccess(request);
 }
