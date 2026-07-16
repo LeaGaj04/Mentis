@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { Calendar as CalendarIcon, Clock, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useSearchParams } from 'next/navigation';
@@ -13,7 +13,7 @@ const availableDays = [
 
 const availableBlocks = ['10:00', '11:30', '15:00', '16:30'];
 
-export default function AgendarPage() {
+function AgendarContent() {
   const searchParams = useSearchParams();
   const urlError = searchParams.get('error');
 
@@ -242,5 +242,17 @@ function AnimatePresenceWrapper({ children, isVisible }: { children: React.React
     >
       {children}
     </motion.div>
+  );
+}
+
+export default function AgendarPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-cream-50 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-olive-600" />
+      </div>
+    }>
+      <AgendarContent />
+    </Suspense>
   );
 }
