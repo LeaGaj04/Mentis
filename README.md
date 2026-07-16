@@ -37,25 +37,50 @@ El proyecto se encuentra **100% funcional**, gestionando de forma segura el cicl
 
 ## Cómo ejecutarlo localmente
 
-Sigue estos pasos para correr el proyecto en tu entorno de desarrollo:
+**Pasos de instalación**
+1. Clonar el repositorio y entrar a la carpeta:
+Abre tu terminal y ejecuta estos comandos para descargar el código y entrar al directorio del proyecto:
 
-1. **Clona el repositorio e instala las dependencias:**
    ```bash
-   
-   git clone [https://github.com/LeaGaj04/Mentis.git](https://github.com/LeaGaj04/Mentis.git)
+   git clone https://github.com/LeaGaj04/Mentis.git
    cd Mentis
+   
+2. Instalar las dependencias:
+Descarga todas las librerías necesarias (como Next.js, React, Resend y Tailwind):
+
+   ```bash
    npm install
-   
-   Configura las variables de entorno:
-   
-   Crea un archivo .env.local en la raíz del proyecto y agrega tus credenciales privadas (Resend, Google, etc.):
-      Fragmento de código
-      RESEND_API_KEY=tu_api_key_de_resend
-      # Añade el resto de tus variables de entorno aquí
-   
-   Inicia el servidor de desarrollo:
-      Bash
-      npm run dev
-   
-   Abre la aplicación:
-   Navega a http://localhost:3000 en tu navegador para interactuar con la plataforma.
+
+3. Configurar las variables de entorno:
+Crea un archivo llamado .env.local en la carpeta raíz del proyecto (al mismo nivel que el package.json).
+Abre ese archivo en tu editor de código y agrega tus credenciales privadas. Debería tener esta estructura:
+
+   ```bash
+   # Clave de Resend para el envío de correos transaccionales
+   RESEND_API_KEY=tu_clave_secreta_de_resend_aqui
+
+   # Credenciales de Google Workspace / Meet API
+   GOOGLE_CLIENT_ID=tu_client_id_aqui
+   GOOGLE_CLIENT_SECRET=tu_client_secret_aqui
+   GOOGLE_REFRESH_TOKEN=tu_refresh_token_aqui
+
+4. Iniciar el servidor de desarrollo:
+Una vez instaladas las dependencias y configuradas las credenciales, levanta el entorno de desarrollo ejecutando:
+
+   ```bash
+   npm run dev
+
+5. Abrir la aplicación:
+Abre tu navegador web y visita http://localhost:3000 para interactuar con la plataforma completamente funcional.
+
+
+
+
+
+
+
+
+
+
+
+
