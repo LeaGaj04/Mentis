@@ -105,7 +105,7 @@ El proyecto sigue la arquitectura recomendada por Next.js (App Router), separand
    └── tailwind.config.ts    # Configuracion del sistema de diseño
    ```
 
-Esta estructura demuestra orden, separa bien las responsabilidades (UI, rutas y lógica de servidor/API) y le da un aspecto muy profesional y técnico a tu documentación.
+Esta estructura demuestra orden, separa bien las responsabilidades (UI, rutas y lógica de servidor/API).
 
 
 
