@@ -48,15 +48,13 @@ Sigue estos pasos para correr el proyecto en tu entorno de desarrollo:
    Configura las variables de entorno:
    
    Crea un archivo .env.local en la raíz del proyecto y agrega tus credenciales privadas (Resend, Google, etc.):
-
-   Fragmento de código
-   RESEND_API_KEY=tu_api_key_de_resend
-   
-   # Añade el resto de tus variables de entorno aquí
+      Fragmento de código
+      RESEND_API_KEY=tu_api_key_de_resend
+      # Añade el resto de tus variables de entorno aquí
    
    Inicia el servidor de desarrollo:
-
-   Bash
-   npm run dev
-Abre la aplicación:
-Navega a http://localhost:3000 en tu navegador para interactuar con la plataforma.
+      Bash
+      npm run dev
+   
+   Abre la aplicación:
+   Navega a http://localhost:3000 en tu navegador para interactuar con la plataforma.
