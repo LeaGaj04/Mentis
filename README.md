@@ -73,6 +73,40 @@ Una vez instaladas las dependencias y configuradas las credenciales, levanta el 
 5. Abrir la aplicación:
 Abre tu navegador web y visita http://localhost:3000 para interactuar con la plataforma completamente funcional.
 
+## Estructura del Proyecto
+
+El proyecto sigue la arquitectura recomendada por Next.js (App Router), separando claramente el frontend de la logica del servidor.
+
+   ```text
+   ├── public/               # Archivos estaticos (imagenes locales, logos, iconos)
+   ├── src/
+   │   ├── app/              # Sistema de enrutamiento principal
+   │   │   ├── agendar/      # Pagina de reserva y formulario (/agendar)
+   │   │   │   └── page.tsx
+   │   │   ├── api/          # Endpoints seguros del backend (Node.js)
+   │   │   │   └── send/     # Controlador de Resend y Google Meet
+   │   │   │       └── route.ts
+   │   │   ├── globals.css   # Estilos globales y base de Tailwind CSS
+   │   │   ├── layout.tsx    # Estructura maestra (Navbar, Footer, Metadatos)
+   │   │   └── page.tsx      # Landing page principal (Inicio)
+   │   │
+   │   ├── components/       # Componentes visuales reutilizables
+   │   │   ├── ui/           # Botones, inputs, modales, etc.
+   │   │   ├── Footer.tsx
+   │   │   └── Header.tsx
+   │   │
+   │   └── lib/              # Funciones de utilidad y clientes externos
+   │       ├── google.ts     # Configuracion y auth de Google Workspace/Meet
+   │       └── utils.ts      # Funciones auxiliares generales
+   │
+   ├── .env.local            # Variables de entorno secretas (ignorado en git)
+   ├── next.config.ts        # Configuracion general de Next.js
+   ├── package.json          # Dependencias y scripts de ejecucion
+   └── tailwind.config.ts    # Configuracion del sistema de diseño
+   ```
+
+Esta estructura demuestra orden, separa bien las responsabilidades (UI, rutas y lógica de servidor/API) y le da un aspecto muy profesional y técnico a tu documentación.
+
 
 
 
