@@ -24,9 +24,7 @@ export async function POST(request: Request) {
       ],
       description: `Agendamiento sesión ${date} a las ${time}`,
       success_url: `${origin}/api/payment-success?status=success`,
-      success_url_method: "get",
       cancel_url: `${origin}/agendar?error=payment_cancelled`,
-      cancel_url_method: "get",
       // Guardamos TODOS los datos del formulario aquí para usarlos cuando el paciente vuelva victorioso
       metadata: {
         name,
