@@ -74,12 +74,22 @@ export async function createCalendarEvent({
         { method: 'popup', minutes: 10 },      // recordatorio 10 min antes
       ],
     },
+    // Añadimos esto para generar el link de Google Meet automáticamente
+    conferenceData: {
+      createRequest: {
+        requestId: `meet-${Date.now()}`,
+        conferenceSolutionKey: {
+          type: 'hangoutsMeet'
+        }
+      }
+    }
   };
 
   try {
     const response = await calendar.events.insert({
       calendarId: calendarId,
       requestBody: event,
+      conferenceDataVersion: 1, // Requerido para crear la videollamada de Meet
       sendUpdates: 'all', // Esto envía una notificación a los asistentes (el paciente)
     });
 

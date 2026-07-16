@@ -65,8 +65,12 @@ async function handlePaymentSuccess(request: Request) {
     }
 
     // 3. Crear el evento en Google Calendar
+    let meetLink = '';
     try {
-      await createCalendarEvent({ name, email, phone, reason, date, time });
+      const calendarEvent = await createCalendarEvent({ name, email, phone, reason, date, time });
+      if (calendarEvent && calendarEvent.hangoutLink) {
+        meetLink = calendarEvent.hangoutLink;
+      }
     } catch (calendarError) {
       console.error('No se pudo crear el evento en el calendario:', calendarError);
     }
@@ -95,10 +99,14 @@ async function handlePaymentSuccess(request: Request) {
               <h3 style="color: #4b694b; margin-top: 0; margin-bottom: 15px;">Detalles de tu sesión:</h3>
               <p style="margin: 5px 0;"><strong>Fecha:</strong> ${date}</p>
               <p style="margin: 5px 0;"><strong>Hora:</strong> ${time}</p>
+              ${meetLink ? `<div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e2e8f0;">
+                <p style="margin: 0 0 5px 0;"><strong>Enlace de tu videollamada:</strong></p>
+                <a href="${meetLink}" style="color: #2b392b; font-weight: bold; text-decoration: underline; word-break: break-all;">${meetLink}</a>
+              </div>` : ''}
             </div>
             
             <p style="font-size: 15px; line-height: 1.5; color: #64748b;">
-              Pronto te contactaremos a través de tu correo o teléfono registrado (${phone}) para enviarte el enlace seguro de la videollamada.
+              ${meetLink ? `El enlace ya está incluido arriba. Puedes usarlo a la hora acordada.` : `Pronto te contactaremos a través de tu correo o teléfono registrado (${phone}) para enviarte el enlace seguro de la videollamada.`}
             </p>
           </div>
           
