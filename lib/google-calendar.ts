@@ -12,12 +12,11 @@ function getCalendarClient() {
     throw new Error('Faltan credenciales de Google (GOOGLE_CLIENT_EMAIL o GOOGLE_PRIVATE_KEY)');
   }
 
-  const auth = new google.auth.JWT(
-    clientEmail,
-    undefined,
-    privateKey,
-    ['https://www.googleapis.com/auth/calendar.events']
-  );
+  const auth = new google.auth.JWT({
+    email: clientEmail,
+    key: privateKey,
+    scopes: ['https://www.googleapis.com/auth/calendar.events']
+  });
 
   return google.calendar({ version: 'v3', auth });
 }
