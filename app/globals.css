@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 60 30% 98%; /* cream-50 */
+    --foreground: 222.2 84% 4.9%; /* dark text */
+  }
+
+  body {
+    background-color: theme('colors.cream.50');
+    color: theme('colors.slate.800');
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
