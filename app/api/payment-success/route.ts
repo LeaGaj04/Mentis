@@ -65,12 +65,11 @@ async function handlePaymentSuccess(request: Request) {
     }
 
     // 3. Crear el evento en Google Calendar
-    let meetLink = '';
+    // Obtenemos el link fijo desde las variables de entorno
+    let meetLink = process.env.GOOGLE_MEET_LINK || '';
+    
     try {
-      const calendarEvent = await createCalendarEvent({ name, email, phone, reason, date, time });
-      if (calendarEvent && calendarEvent.hangoutLink) {
-        meetLink = calendarEvent.hangoutLink;
-      }
+      await createCalendarEvent({ name, email, phone, reason, date, time });
     } catch (calendarError) {
       console.error('No se pudo crear el evento en el calendario:', calendarError);
     }
