@@ -56,7 +56,17 @@ export async function POST(request: Request) {
     }
 
     // Ventipay devuelve "url" que es donde el usuario debe ir a pagar
-    return NextResponse.json({ url: data.url }, { status: 200 });
+    const nextResponse = NextResponse.json({ url: data.url }, { status: 200 });
+    
+    // Guardamos el checkout ID en una cookie segura para leerla cuando Ventipay redirija de vuelta
+    nextResponse.cookies.set('ventipay_checkout_id', data.id, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 2 // 2 horas
+    });
+
+    return nextResponse;
 
   } catch (error) {
     console.error("Error interno en checkout:", error);

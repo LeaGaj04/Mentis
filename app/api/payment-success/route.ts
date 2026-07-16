@@ -1,10 +1,13 @@
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 import { Resend } from 'resend';
 import { createCalendarEvent } from '../../../lib/google-calendar';
 
 async function handlePaymentSuccess(request: Request) {
   const { searchParams } = new URL(request.url);
-  let checkoutId = searchParams.get('checkout_id') || searchParams.get('id');
+  const cookieStore = cookies();
+  const checkoutIdFromCookie = cookieStore.get('ventipay_checkout_id')?.value;
+  let checkoutId = searchParams.get('checkout_id') || searchParams.get('id') || checkoutIdFromCookie;
 
   let rawBody = '';
   if (request.method === 'POST') {
