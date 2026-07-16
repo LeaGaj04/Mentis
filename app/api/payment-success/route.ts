@@ -6,14 +6,16 @@ async function handlePaymentSuccess(request: Request) {
   const { searchParams } = new URL(request.url);
   let checkoutId = searchParams.get('checkout_id') || searchParams.get('id');
 
+  let rawBody = '';
   if (request.method === 'POST') {
     try {
       const contentType = request.headers.get('content-type') || '';
+      rawBody = await request.text(); // LEEMOS TODO COMO TEXTO PRIMERO
       if (contentType.includes('application/json')) {
-        const body = await request.json();
+        const body = JSON.parse(rawBody);
         checkoutId = checkoutId || body.id || body.checkout_id;
       } else if (contentType.includes('application/x-www-form-urlencoded') || contentType.includes('multipart/form-data')) {
-        const formData = await request.formData();
+        const formData = new URLSearchParams(rawBody);
         checkoutId = checkoutId || formData.get('id')?.toString() || formData.get('checkout_id')?.toString() || null;
       }
     } catch (e) {
@@ -23,8 +25,9 @@ async function handlePaymentSuccess(request: Request) {
 
   // Si por alguna razón no viene el ID, redirigimos al inicio con error
   if (!checkoutId) {
-    const qs = searchParams.toString() || 'no_query_params_received';
-    return NextResponse.redirect(new URL(`/agendar?error=missing_checkout&debug_qs=${encodeURIComponent(qs)}`, request.url), 303);
+    const qs = searchParams.toString();
+    const debugInfo = `method_${request.method}_qs_${qs || 'empty'}_body_${rawBody.substring(0, 50) || 'empty'}`;
+    return NextResponse.redirect(new URL(`/agendar?error=missing_checkout&debug_qs=${encodeURIComponent(debugInfo)}`, request.url), 303);
   }
 
   try {
