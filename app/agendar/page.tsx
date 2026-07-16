@@ -28,14 +28,20 @@ export default function AgendarPage() {
     setStatus('loading');
     
     try {
-      const res = await fetch('/api/send', {
+      const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...formData, date: selectedDay, time: selectedBlock }),
       });
       
       if (res.ok) {
-        setStatus('success');
+        const data = await res.json();
+        if (data.url) {
+          // Redirigir al paciente a la pasarela de pagos (VentiPay)
+          window.location.href = data.url;
+        } else {
+          setStatus('error');
+        }
       } else {
         setStatus('error');
       }
@@ -193,10 +199,10 @@ export default function AgendarPage() {
               {status === 'loading' ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  Procesando...
+                  Redirigiendo al pago...
                 </>
               ) : (
-                'Confirmar Cita'
+                'Pagar y Agendar ($19.990)'
               )}
             </button>
             <p className="text-xs text-center text-slate-500 mt-4">
