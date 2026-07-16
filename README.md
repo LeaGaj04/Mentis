@@ -2,7 +2,7 @@
 
 🔗 **[Ver Demo en Vivo (Vercel)](https://mentis-swart.vercel.app/)**
 
-![Mentis - Página de Inicio]
+![Mentis - Página de Inicio]¡
 
 <img width="1892" height="866" alt="image" src="https://github.com/user-attachments/assets/8b8b898c-af14-49f4-8f13-880fba7e3709" />
 
