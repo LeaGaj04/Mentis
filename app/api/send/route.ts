@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import { createCalendarEvent } from '../../../lib/google-calendar';
 
 export async function POST(request: Request) {
   // Inicializar Resend con la API key de las variables de entorno
@@ -15,6 +16,19 @@ export async function POST(request: Request) {
         { error: 'Faltan campos obligatorios' },
         { status: 400 }
       );
+    }
+
+    // 1. Crear evento en Google Calendar
+    // Envolvemos en try/catch para que si falla el calendario (por credenciales o algo) no rompa todo si no quieres, 
+    // pero idealmente deberíamos saber si falla.
+    let eventLink = '';
+    try {
+      const event = await createCalendarEvent({ name, email, phone, reason, date, time });
+      eventLink = event.htmlLink || '';
+      console.log('Evento creado en calendar:', eventLink);
+    } catch (calendarError) {
+      console.error('No se pudo crear el evento en el calendario:', calendarError);
+      // Opcional: podrías retornar error aquí si es crítico que se agende
     }
 
     // Aquí usamos una dirección de prueba o puedes configurar la tuya en Resend (ej: onboarding@resend.dev)
@@ -68,7 +82,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Error enviando correo:', error);
     return NextResponse.json(
-      { error: 'Error interno del servidor al enviar el correo' },
+      { error: 'Error interno del servidor al procesar la solicitud' },
       { status: 500 }
     );
   }
