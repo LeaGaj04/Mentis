@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Calendar as CalendarIcon, Clock, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useSearchParams } from 'next/navigation';
 
 const availableDays = [
   { date: '2026-07-20', label: 'Lun, 20 Jul' },
@@ -13,10 +14,25 @@ const availableDays = [
 const availableBlocks = ['10:00', '11:30', '15:00', '16:30'];
 
 export default function AgendarPage() {
+  const searchParams = useSearchParams();
+  const urlError = searchParams.get('error');
+
   const [selectedDay, setSelectedDay] = useState<string>('');
   const [selectedBlock, setSelectedBlock] = useState<string>('');
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', reason: '' });
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>(urlError ? 'error' : 'idle');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+
+  useEffect(() => {
+    if (urlError) {
+      if (urlError === 'missing_checkout') setErrorMessage('No se encontró el identificador del pago.');
+      else if (urlError === 'ventipay_error') setErrorMessage('Error al verificar el estado del pago con Ventipay.');
+      else if (urlError === 'payment_not_completed') setErrorMessage('El pago no fue completado exitosamente.');
+      else if (urlError === 'missing_metadata') setErrorMessage('Faltan los datos del paciente en el pago.');
+      else if (urlError === 'server_error') setErrorMessage('Ocurrió un error interno en el servidor.');
+      else setErrorMessage('Ocurrió un error desconocido.');
+    }
+  }, [urlError]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -137,7 +153,7 @@ export default function AgendarPage() {
           {status === 'error' && (
             <div className="mb-6 p-4 bg-red-50 text-red-700 rounded-xl flex items-start gap-3 text-sm">
               <AlertCircle className="w-5 h-5 shrink-0" />
-              <p>Ocurrió un error al enviar tu solicitud. Por favor intenta nuevamente o contáctame directamente.</p>
+              <p>{errorMessage || 'Ocurrió un error al enviar tu solicitud. Por favor intenta nuevamente o contáctame directamente.'}</p>
             </div>
           )}
 
