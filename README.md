@@ -2,7 +2,8 @@
 
 🔗 **[Ver Demo en Vivo (Vercel)](https://mentis-swart.vercel.app/)**
 
-![Mentis - Página de Inicio](image_94d20c.jpg)
+![Mentis - Página de Inicio](<img width="1892" height="866" alt="image" src="https://github.com/user-attachments/assets/8b8b898c-af14-49f4-8f13-880fba7e3709" />
+)
 
 ## Sobre el Proyecto
 
@@ -39,18 +40,23 @@ Sigue estos pasos para correr el proyecto en tu entorno de desarrollo:
 
 1. **Clona el repositorio e instala las dependencias:**
    ```bash
+   
    git clone [https://github.com/LeaGaj04/Mentis.git](https://github.com/LeaGaj04/Mentis.git)
    cd Mentis
    npm install
-Configura las variables de entorno:
-Crea un archivo .env.local en la raíz del proyecto y agrega tus credenciales privadas (Resend, Google, etc.):
+   
+   Configura las variables de entorno:
+   
+   Crea un archivo .env.local en la raíz del proyecto y agrega tus credenciales privadas (Resend, Google, etc.):
 
-Fragmento de código
-RESEND_API_KEY=tu_api_key_de_resend
-# Añade el resto de tus variables de entorno aquí
-Inicia el servidor de desarrollo:
+   Fragmento de código
+   RESEND_API_KEY=tu_api_key_de_resend
+   
+   # Añade el resto de tus variables de entorno aquí
+   
+   Inicia el servidor de desarrollo:
 
-Bash
-npm run dev
+   Bash
+   npm run dev
 Abre la aplicación:
 Navega a http://localhost:3000 en tu navegador para interactuar con la plataforma.
