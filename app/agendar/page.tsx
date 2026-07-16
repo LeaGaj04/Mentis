@@ -16,6 +16,7 @@ const availableBlocks = ['10:00', '11:30', '15:00', '16:30'];
 function AgendarContent() {
   const searchParams = useSearchParams();
   const urlError = searchParams.get('error');
+  const debugQs = searchParams.get('debug_qs');
 
   const [selectedDay, setSelectedDay] = useState<string>('');
   const [selectedBlock, setSelectedBlock] = useState<string>('');
@@ -25,14 +26,15 @@ function AgendarContent() {
 
   useEffect(() => {
     if (urlError) {
-      if (urlError === 'missing_checkout') setErrorMessage('No se encontró el identificador del pago.');
-      else if (urlError === 'ventipay_error') setErrorMessage('Error al verificar el estado del pago con Ventipay.');
-      else if (urlError === 'payment_not_completed') setErrorMessage('El pago no fue completado exitosamente.');
-      else if (urlError === 'missing_metadata') setErrorMessage('Faltan los datos del paciente en el pago.');
-      else if (urlError === 'server_error') setErrorMessage('Ocurrió un error interno en el servidor.');
-      else setErrorMessage('Ocurrió un error desconocido.');
+      const debugInfo = debugQs ? ` (Debug: ${debugQs})` : '';
+      if (urlError === 'missing_checkout') setErrorMessage(`No se encontró el identificador del pago.${debugInfo}`);
+      else if (urlError === 'ventipay_error') setErrorMessage(`Error al verificar el estado del pago con Ventipay.${debugInfo}`);
+      else if (urlError === 'payment_not_completed') setErrorMessage(`El pago no fue completado exitosamente.${debugInfo}`);
+      else if (urlError === 'missing_metadata') setErrorMessage(`Faltan los datos del paciente en el pago.${debugInfo}`);
+      else if (urlError === 'server_error') setErrorMessage(`Ocurrió un error interno en el servidor.${debugInfo}`);
+      else setErrorMessage(`Ocurrió un error desconocido.${debugInfo}`);
     }
-  }, [urlError]);
+  }, [urlError, debugQs]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -23,7 +23,8 @@ async function handlePaymentSuccess(request: Request) {
 
   // Si por alguna razón no viene el ID, redirigimos al inicio con error
   if (!checkoutId) {
-    return NextResponse.redirect(new URL('/agendar?error=missing_checkout', request.url), 303);
+    const qs = searchParams.toString() || 'no_query_params_received';
+    return NextResponse.redirect(new URL(`/agendar?error=missing_checkout&debug_qs=${encodeURIComponent(qs)}`, request.url), 303);
   }
 
   try {
