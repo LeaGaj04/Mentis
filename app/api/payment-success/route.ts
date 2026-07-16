@@ -14,7 +14,7 @@ async function handlePaymentSuccess(request: Request) {
         checkoutId = checkoutId || body.id || body.checkout_id;
       } else if (contentType.includes('application/x-www-form-urlencoded') || contentType.includes('multipart/form-data')) {
         const formData = await request.formData();
-        checkoutId = checkoutId || formData.get('id')?.toString() || formData.get('checkout_id')?.toString();
+        checkoutId = checkoutId || formData.get('id')?.toString() || formData.get('checkout_id')?.toString() || null;
       }
     } catch (e) {
       console.error("Error leyendo body del POST", e);
