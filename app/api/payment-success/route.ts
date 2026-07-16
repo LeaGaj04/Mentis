@@ -98,6 +98,7 @@ async function handlePaymentSuccess(request: Request) {
               <h3 style="color: #4b694b; margin-top: 0; margin-bottom: 15px;">Detalles de tu sesión:</h3>
               <p style="margin: 5px 0;"><strong>Fecha:</strong> ${date}</p>
               <p style="margin: 5px 0;"><strong>Hora:</strong> ${time}</p>
+              ${reason ? `<p style="margin: 5px 0;"><strong>Motivo de consulta:</strong> ${reason}</p>` : ''}
               ${meetLink ? `<div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e2e8f0;">
                 <p style="margin: 0 0 5px 0;"><strong>Enlace de tu videollamada:</strong></p>
                 <a href="${meetLink}" style="color: #2b392b; font-weight: bold; text-decoration: underline; word-break: break-all;">${meetLink}</a>
