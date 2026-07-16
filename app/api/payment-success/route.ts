@@ -19,7 +19,7 @@ async function handlePaymentSuccess(request: Request) {
         checkoutId = checkoutId || body.id || body.checkout_id;
       } else if (contentType.includes('application/x-www-form-urlencoded') || contentType.includes('multipart/form-data')) {
         const formData = new URLSearchParams(rawBody);
-        checkoutId = checkoutId || formData.get('id')?.toString() || formData.get('checkout_id')?.toString() || null;
+        checkoutId = checkoutId || formData.get('id')?.toString() || formData.get('checkout_id')?.toString() || undefined;
       }
     } catch (e) {
       console.error("Error leyendo body del POST", e);
