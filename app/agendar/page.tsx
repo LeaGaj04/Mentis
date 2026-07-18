@@ -163,22 +163,24 @@ function AgendarContent() {
           <h2 className="text-2xl font-bold mb-2 w-full text-left">Selecciona tu hora</h2>
           <p className="text-olive-200 text-sm mb-6 w-full text-left">Elige el momento que mejor se adapte a tu rutina.</p>
           
-          <div className="bg-white/90 backdrop-blur-md text-slate-800 p-2 sm:p-4 rounded-2xl sm:rounded-3xl shadow-inner mb-6 w-full flex justify-center overflow-x-auto">
-             <DayPicker
-                mode="single"
-                selected={selectedDay}
-                onSelect={handleDaySelect}
-                onMonthChange={setCurrentMonth}
-                locale={es}
-                disabled={[
-                  { dayOfWeek: [0, 6] },
-                  { before: startOfDay(new Date()) }
-                ]}
-                modifiersClassNames={{
-                  selected: 'bg-olive-600 text-white font-bold',
-                  today: 'text-olive-600 font-bold'
-                }}
-             />
+          <div className="bg-white/90 backdrop-blur-md text-slate-800 p-2 sm:p-4 rounded-2xl sm:rounded-3xl shadow-inner mb-6 w-full flex justify-center overflow-hidden">
+             <div className="scale-[0.85] sm:scale-100 origin-top -mb-10 sm:mb-0 mt-[-10px] sm:mt-0">
+               <DayPicker
+                  mode="single"
+                  selected={selectedDay}
+                  onSelect={handleDaySelect}
+                  onMonthChange={setCurrentMonth}
+                  locale={es}
+                  disabled={[
+                    { dayOfWeek: [0, 6] },
+                    { before: startOfDay(new Date()) }
+                  ]}
+                  modifiersClassNames={{
+                    selected: 'bg-olive-600 text-white font-bold',
+                    today: 'text-olive-600 font-bold'
+                  }}
+               />
+             </div>
           </div>
 
           <AnimatePresenceWrapper isVisible={!!selectedDay}>

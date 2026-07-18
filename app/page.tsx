@@ -6,24 +6,24 @@ export default function Home() {
   return (
     <div className="flex flex-col w-full">
       {/* Hero Section */}
-      <section className="relative w-full pt-12 pb-24 md:pt-20 md:pb-32 overflow-hidden">
+      <section className="relative w-full pt-12 pb-16 md:pt-16 md:pb-20 overflow-hidden min-h-[90vh] flex items-center">
         <div className="container mx-auto px-4 relative z-10">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-12 lg:gap-8 max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8 lg:gap-12 max-w-[85rem] mx-auto">
             
             {/* Left Column: Main Hero Card */}
-            <div className="w-full md:w-7/12 bg-white/40 backdrop-blur-xl border border-white/60 rounded-3xl md:rounded-[3rem] p-6 sm:p-8 md:p-14 shadow-2xl text-left">
-              <span className="inline-block bg-white/80 backdrop-blur-sm text-olive-700 px-4 py-2 rounded-full text-xs sm:text-sm font-semibold mb-6 sm:mb-8 shadow-sm">
+            <div className="w-full md:w-7/12 bg-white/40 backdrop-blur-xl border border-white/60 rounded-3xl md:rounded-[3rem] p-6 sm:p-8 md:p-10 lg:p-12 shadow-2xl text-left">
+              <span className="inline-block bg-white/80 backdrop-blur-sm text-olive-700 px-4 py-2 rounded-full text-xs sm:text-sm font-semibold mb-6 shadow-sm">
                 Atención Psicológica 100% Online
               </span>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-olive-900 tracking-tight mb-4 sm:mb-6 leading-[1.15] md:leading-[1.1]">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] xl:text-6xl font-extrabold text-olive-900 tracking-tight mb-4 lg:mb-6 leading-[1.15] md:leading-[1.1]">
                 Un espacio seguro <br className="hidden md:block" />
                 para tu <span className="text-olive-600 border-b-4 border-olive-400/50 pb-1">bienestar mental</span>, <br className="hidden md:block" />
                 desde casa.
               </h1>
-              <p className="text-lg text-slate-700 mb-10 max-w-lg leading-relaxed font-medium">
+              <p className="text-lg text-slate-700 mb-8 max-w-xl leading-relaxed font-medium">
                 Inicia tu proceso terapéutico con empatía, profesionalismo y total confidencialidad. Da el primer paso hacia la tranquilidad que buscas sin salir de tu hogar.
               </p>
-              <div className="flex flex-col sm:flex-row items-center gap-4 mb-10">
+              <div className="flex flex-col sm:flex-row items-center gap-4 mb-8">
                 <Link
                   href="/agendar"
                   className="w-full sm:w-auto px-6 py-4 bg-olive-600/90 backdrop-blur-md text-white rounded-full font-bold shadow-lg hover:bg-olive-700 transition-colors flex items-center justify-center gap-2 border border-olive-500"
