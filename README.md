@@ -6,6 +6,11 @@
 
 <img width="1892" height="866" alt="image" src="https://github.com/user-attachments/assets/8b8b898c-af14-49f4-8f13-880fba7e3709" />
 
+## Mentis - Página de Inicio V1.1
+
+<img width="1897" height="946" alt="image" src="https://github.com/user-attachments/assets/c6951b2f-be63-4e16-8768-189825291538" />
+
+
 ## Sobre el Proyecto
 
 **Mentis** es una plataforma web Full-Stack moderna, empática y altamente estética, diseñada para facilitar el acceso a servicios de psicología clínica online. Construida sobre el ecosistema de Next.js, la aplicación ofrece una experiencia de usuario impecable y sin fricciones, respaldada por un sistema de backend robusto para la automatización de citas.
