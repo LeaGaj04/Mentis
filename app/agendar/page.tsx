@@ -130,11 +130,11 @@ function AgendarContent() {
 
   if (status === 'success') {
     return (
-      <div className="min-h-[70vh] flex items-center justify-center bg-cream-50 px-4">
+      <div className="min-h-[70vh] flex items-center justify-center px-4 relative z-10">
         <motion.div 
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="bg-white p-8 rounded-3xl shadow-lg max-w-md w-full text-center border border-olive-100"
+          className="bg-white/60 backdrop-blur-xl p-8 rounded-[3rem] shadow-2xl max-w-md w-full text-center border border-white/60"
         >
           <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 text-green-600">
             <CheckCircle2 className="w-10 h-10" />
@@ -155,15 +155,15 @@ function AgendarContent() {
   }
 
   return (
-    <div className="min-h-screen bg-cream-50 py-12 px-4">
-      <div className="max-w-5xl mx-auto bg-white rounded-3xl shadow-sm border border-olive-100 overflow-hidden flex flex-col md:flex-row">
+    <div className="min-h-screen py-12 px-4 relative z-10">
+      <div className="max-w-5xl mx-auto bg-white/60 backdrop-blur-2xl rounded-[3rem] shadow-2xl border border-white/60 overflow-hidden flex flex-col md:flex-row">
         
         {/* Panel Izquierdo: Selección de Hora y Calendario */}
-        <div className="w-full md:w-6/12 bg-olive-900 text-white p-6 md:p-8 flex flex-col items-center">
+        <div className="w-full md:w-6/12 bg-olive-900/80 backdrop-blur-xl text-white p-6 md:p-8 flex flex-col items-center border-r border-white/20">
           <h2 className="text-2xl font-bold mb-2 w-full text-left">Selecciona tu hora</h2>
           <p className="text-olive-200 text-sm mb-6 w-full text-left">Elige el momento que mejor se adapte a tu rutina.</p>
           
-          <div className="bg-white text-slate-800 p-4 rounded-3xl shadow-inner mb-6 w-full flex justify-center">
+          <div className="bg-white/90 backdrop-blur-md text-slate-800 p-4 rounded-3xl shadow-inner mb-6 w-full flex justify-center">
              <DayPicker
                 mode="single"
                 selected={selectedDay}
@@ -251,7 +251,7 @@ function AgendarContent() {
                 type="text"
                 id="name"
                 required
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none transition-shadow"
+                className="w-full px-4 py-3 rounded-xl border border-white/50 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none transition-shadow"
                 value={formData.name}
                 onChange={e => setFormData({ ...formData, name: e.target.value })}
               />
@@ -264,7 +264,7 @@ function AgendarContent() {
                   type="email"
                   id="email"
                   required
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none transition-shadow"
+                  className="w-full px-4 py-3 rounded-xl border border-white/50 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none transition-shadow"
                   value={formData.email}
                   onChange={e => setFormData({ ...formData, email: e.target.value })}
                 />
@@ -275,7 +275,7 @@ function AgendarContent() {
                   type="tel"
                   id="phone"
                   required
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none transition-shadow"
+                  className="w-full px-4 py-3 rounded-xl border border-white/50 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none transition-shadow"
                   value={formData.phone}
                   onChange={e => setFormData({ ...formData, phone: e.target.value })}
                 />
@@ -287,7 +287,7 @@ function AgendarContent() {
               <textarea
                 id="reason"
                 rows={4}
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none transition-shadow resize-none"
+                className="w-full px-4 py-3 rounded-xl border border-white/50 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none transition-shadow resize-none"
                 value={formData.reason}
                 onChange={e => setFormData({ ...formData, reason: e.target.value })}
                 placeholder="Cuéntame brevemente qué te trae por aquí..."
@@ -335,7 +335,7 @@ function AnimatePresenceWrapper({ children, isVisible }: { children: React.React
 export default function AgendarPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-cream-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-olive-600" />
       </div>
     }>

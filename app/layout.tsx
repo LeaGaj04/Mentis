@@ -18,9 +18,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className="scroll-smooth">
-      <body className={`${inter.className} min-h-screen flex flex-col antialiased`}>
+      <body className={`${inter.className} min-h-screen flex flex-col antialiased relative bg-cream-50`}>
+        {/* Animated Background Blobs */}
+        <div className="fixed inset-0 overflow-hidden -z-10 pointer-events-none">
+          <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-olive-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob" />
+          <div className="absolute top-[20%] right-[-10%] w-96 h-96 bg-cream-300 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob" style={{ animationDelay: '2s' }} />
+          <div className="absolute bottom-[-20%] left-[20%] w-[500px] h-[500px] bg-olive-200 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob" style={{ animationDelay: '4s' }} />
+        </div>
+        
         <Header />
-        <main className="flex-grow">{children}</main>
+        <main className="flex-grow z-10 relative">{children}</main>
         <Footer />
       </body>
     </html>
