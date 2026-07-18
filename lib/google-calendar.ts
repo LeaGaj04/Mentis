@@ -63,10 +63,6 @@ export async function createCalendarEvent({
       dateTime: endDateTime.toISOString(),
       timeZone: 'America/Santiago',
     },
-    // Añadimos asistentes para que el paciente reciba una invitación al calendario
-    attendees: [
-      { email: email }
-    ],
     reminders: {
       useDefault: false,
       overrides: [
@@ -80,12 +76,47 @@ export async function createCalendarEvent({
     const response = await calendar.events.insert({
       calendarId: calendarId,
       requestBody: event,
-      sendUpdates: 'all', // Esto envía una notificación a los asistentes (el paciente)
     });
 
     return response.data;
   } catch (error) {
     console.error('Error al crear el evento en Calendar:', error);
+    throw error;
+  }
+}
+
+/**
+ * Obtiene los bloques de tiempo ocupados en un rango de fechas.
+ */
+export async function getBusySlots(timeMin: Date, timeMax: Date) {
+  const calendarId = process.env.GOOGLE_CALENDAR_ID;
+
+  if (!calendarId) {
+    throw new Error('Falta el GOOGLE_CALENDAR_ID en las variables de entorno');
+  }
+
+  const calendar = getCalendarClient();
+
+  try {
+    const response = await calendar.events.list({
+      calendarId: calendarId,
+      timeMin: timeMin.toISOString(),
+      timeMax: timeMax.toISOString(),
+      singleEvents: true,
+      orderBy: 'startTime',
+    });
+
+    const events = response.data.items || [];
+    
+    // Mapeamos los eventos a objetos con start y end
+    return events.map(event => {
+      return {
+        start: event.start?.dateTime || event.start?.date,
+        end: event.end?.dateTime || event.end?.date,
+      };
+    });
+  } catch (error) {
+    console.error('Error al obtener la disponibilidad de Calendar:', error);
     throw error;
   }
 }

@@ -1,28 +1,30 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
-import { Calendar as CalendarIcon, Clock, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import { useState, useEffect, Suspense, useMemo } from 'react';
+import { Clock, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useSearchParams } from 'next/navigation';
+import { DayPicker } from 'react-day-picker';
+import { format, parseISO, addMonths, startOfMonth, endOfMonth, isBefore, startOfDay, addMinutes, isWeekend } from 'date-fns';
+import { es } from 'date-fns/locale';
+import 'react-day-picker/dist/style.css';
 
-const availableDays = [
-  { date: '2026-07-20', label: 'Lun, 20 Jul' },
-  { date: '2026-07-21', label: 'Mar, 21 Jul' },
-  { date: '2026-07-22', label: 'Mié, 22 Jul' },
-];
-
-const availableBlocks = ['10:00', '11:30', '15:00', '16:30'];
+const DEFAULT_BLOCKS = ['10:00', '11:30', '15:00', '16:30'];
 
 function AgendarContent() {
   const searchParams = useSearchParams();
   const urlError = searchParams.get('error');
   const debugQs = searchParams.get('debug_qs');
 
-  const [selectedDay, setSelectedDay] = useState<string>('');
+  const [selectedDay, setSelectedDay] = useState<Date | undefined>(undefined);
   const [selectedBlock, setSelectedBlock] = useState<string>('');
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', reason: '' });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>(urlError ? 'error' : 'idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  
+  const [busySlots, setBusySlots] = useState<{start: string, end: string}[]>([]);
+  const [isLoadingAvailability, setIsLoadingAvailability] = useState(true);
+  const [currentMonth, setCurrentMonth] = useState<Date>(startOfMonth(new Date()));
 
   useEffect(() => {
     if (urlError) {
@@ -36,6 +38,56 @@ function AgendarContent() {
     }
   }, [urlError, debugQs]);
 
+  useEffect(() => {
+    const fetchAvailability = async () => {
+      setIsLoadingAvailability(true);
+      try {
+        const start = startOfMonth(currentMonth).toISOString();
+        const end = endOfMonth(addMonths(currentMonth, 1)).toISOString();
+        
+        const res = await fetch(`/api/availability?start=${start}&end=${end}`);
+        if (res.ok) {
+          const data = await res.json();
+          setBusySlots(data.busySlots || []);
+        }
+      } catch (error) {
+        console.error("Error fetching availability", error);
+      } finally {
+        setIsLoadingAvailability(false);
+      }
+    };
+    
+    fetchAvailability();
+  }, [currentMonth]);
+
+  const availableBlocksForSelectedDay = useMemo(() => {
+    if (!selectedDay) return [];
+    
+    const today = startOfDay(new Date());
+    if (isBefore(selectedDay, today)) return [];
+
+    return DEFAULT_BLOCKS.map(time => {
+      const [hours, minutes] = time.split(':').map(Number);
+      const blockStart = new Date(selectedDay);
+      blockStart.setHours(hours, minutes, 0, 0);
+      const blockEnd = addMinutes(blockStart, 50);
+
+      const isBusy = busySlots.some(slot => {
+        if (!slot.start || !slot.end) return false;
+        const busyStart = parseISO(slot.start);
+        const busyEnd = parseISO(slot.end);
+        return blockStart < busyEnd && blockEnd > busyStart;
+      });
+
+      const isPast = blockStart < new Date();
+
+      return {
+        time,
+        isAvailable: !isBusy && !isPast
+      };
+    });
+  }, [selectedDay, busySlots]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedDay || !selectedBlock) {
@@ -45,17 +97,18 @@ function AgendarContent() {
     
     setStatus('loading');
     
+    const formattedDate = format(selectedDay, 'yyyy-MM-dd');
+    
     try {
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, date: selectedDay, time: selectedBlock }),
+        body: JSON.stringify({ ...formData, date: formattedDate, time: selectedBlock }),
       });
       
       if (res.ok) {
         const data = await res.json();
         if (data.url) {
-          // Redirigir al paciente a la pasarela de pagos (VentiPay)
           window.location.href = data.url;
         } else {
           setStatus('error');
@@ -65,6 +118,13 @@ function AgendarContent() {
       }
     } catch (error) {
       setStatus('error');
+    }
+  };
+
+  const handleDaySelect = (day: Date | undefined) => {
+    if (day && !isWeekend(day) && !isBefore(day, startOfDay(new Date()))) {
+      setSelectedDay(day);
+      setSelectedBlock(''); // Reset block when day changes
     }
   };
 
@@ -81,7 +141,7 @@ function AgendarContent() {
           </div>
           <h2 className="text-2xl font-bold text-olive-900 mb-2">¡Hora Solicitada!</h2>
           <p className="text-slate-600 mb-6">
-            Hemos recibido tu solicitud para el {selectedDay} a las {selectedBlock}. Te hemos enviado un correo con los pasos a seguir.
+            Hemos recibido tu solicitud para el {selectedDay ? format(selectedDay, 'dd/MM/yyyy') : ''} a las {selectedBlock}. Te hemos enviado un correo con los pasos a seguir.
           </p>
           <button 
             onClick={() => window.location.href = '/'}
@@ -96,60 +156,85 @@ function AgendarContent() {
 
   return (
     <div className="min-h-screen bg-cream-50 py-12 px-4">
-      <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-sm border border-olive-100 overflow-hidden flex flex-col md:flex-row">
+      <div className="max-w-5xl mx-auto bg-white rounded-3xl shadow-sm border border-olive-100 overflow-hidden flex flex-col md:flex-row">
         
-        {/* Panel Izquierdo: Selección de Hora */}
-        <div className="w-full md:w-5/12 bg-olive-900 text-white p-8 md:p-10 flex flex-col">
-          <h2 className="text-2xl font-bold mb-2">Selecciona tu hora</h2>
-          <p className="text-olive-200 text-sm mb-8">Elige el momento que mejor se adapte a tu rutina para tu sesión online.</p>
+        {/* Panel Izquierdo: Selección de Hora y Calendario */}
+        <div className="w-full md:w-6/12 bg-olive-900 text-white p-6 md:p-8 flex flex-col items-center">
+          <h2 className="text-2xl font-bold mb-2 w-full text-left">Selecciona tu hora</h2>
+          <p className="text-olive-200 text-sm mb-6 w-full text-left">Elige el momento que mejor se adapte a tu rutina.</p>
           
-          <div className="mb-6">
-            <h3 className="flex items-center gap-2 font-medium mb-3 text-cream-100">
-              <CalendarIcon className="w-4 h-4" /> Días Disponibles
-            </h3>
-            <div className="grid grid-cols-1 gap-2">
-              {availableDays.map(day => (
-                <button
-                  key={day.date}
-                  onClick={() => setSelectedDay(day.date)}
-                  className={`py-3 px-4 rounded-xl text-left transition-colors border ${
-                    selectedDay === day.date 
-                      ? 'bg-olive-700 border-olive-500 shadow-inner' 
-                      : 'bg-olive-800/50 border-transparent hover:bg-olive-800'
-                  }`}
-                >
-                  {day.label}
-                </button>
-              ))}
-            </div>
+          <div className="bg-white text-slate-800 p-4 rounded-3xl shadow-inner mb-6 w-full flex justify-center">
+             <DayPicker
+                mode="single"
+                selected={selectedDay}
+                onSelect={handleDaySelect}
+                onMonthChange={setCurrentMonth}
+                locale={es}
+                disabled={[
+                  { dayOfWeek: [0, 6] },
+                  { before: startOfDay(new Date()) }
+                ]}
+                modifiersClassNames={{
+                  selected: 'bg-olive-600 text-white font-bold',
+                  today: 'text-olive-600 font-bold'
+                }}
+             />
           </div>
 
           <AnimatePresenceWrapper isVisible={!!selectedDay}>
-            <div>
-              <h3 className="flex items-center gap-2 font-medium mb-3 text-cream-100">
-                <Clock className="w-4 h-4" /> Horas Disponibles
-              </h3>
-              <div className="grid grid-cols-2 gap-2">
-                {availableBlocks.map(block => (
-                  <button
-                    key={block}
-                    onClick={() => setSelectedBlock(block)}
-                    className={`py-2 px-3 rounded-lg text-center transition-colors border ${
-                      selectedBlock === block 
-                        ? 'bg-cream-100 text-olive-900 font-bold border-cream-200' 
-                        : 'bg-olive-800/50 text-olive-100 border-transparent hover:bg-olive-800'
-                    }`}
-                  >
-                    {block}
-                  </button>
-                ))}
+            <div className="w-full">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="flex items-center gap-2 font-medium text-cream-100">
+                  <Clock className="w-4 h-4" /> 
+                  Horas para el {selectedDay ? format(selectedDay, "d 'de' MMMM", { locale: es }) : ''}
+                </h3>
+                {isLoadingAvailability && <Loader2 className="w-4 h-4 animate-spin text-cream-100" />}
               </div>
+              
+              <div className="grid grid-cols-2 gap-2">
+                {availableBlocksForSelectedDay.map(block => {
+                  if (!block.isAvailable) {
+                    return (
+                      <div key={block.time} className="relative group">
+                         <button
+                           disabled
+                           className="w-full py-2 px-3 rounded-lg text-center transition-colors border bg-red-900/40 text-red-200/50 border-red-800/50 cursor-not-allowed line-through flex items-center justify-center gap-2"
+                         >
+                           <span className="w-2 h-2 rounded-full bg-red-500"></span>
+                           {block.time}
+                         </button>
+                      </div>
+                    )
+                  }
+                  
+                  return (
+                    <button
+                      key={block.time}
+                      onClick={() => setSelectedBlock(block.time)}
+                      className={`py-2 px-3 rounded-lg text-center transition-colors border flex items-center justify-center gap-2 ${
+                        selectedBlock === block.time 
+                          ? 'bg-cream-100 text-olive-900 font-bold border-cream-200 shadow-md' 
+                          : 'bg-olive-800/50 text-olive-100 border-transparent hover:bg-olive-800'
+                      }`}
+                    >
+                      <span className={`w-2 h-2 rounded-full ${selectedBlock === block.time ? 'bg-olive-600' : 'bg-green-400'}`}></span>
+                      {block.time}
+                    </button>
+                  )
+                })}
+              </div>
+              
+              {availableBlocksForSelectedDay.length > 0 && availableBlocksForSelectedDay.every(b => !b.isAvailable) && (
+                <p className="text-red-300 text-sm mt-3 text-center">
+                  Todas las horas están ocupadas para este día.
+                </p>
+              )}
             </div>
           </AnimatePresenceWrapper>
         </div>
 
         {/* Panel Derecho: Formulario */}
-        <div className="w-full md:w-7/12 p-8 md:p-10">
+        <div className="w-full md:w-6/12 p-8 md:p-10">
           <h2 className="text-2xl font-bold text-olive-900 mb-6">Tus Datos</h2>
           
           {status === 'error' && (
