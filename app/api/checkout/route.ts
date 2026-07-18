@@ -9,6 +9,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Faltan campos obligatorios' }, { status: 400 });
     }
 
+    // 0. Validación y Saneamiento Básico
+    if (name.length > 150 || email.length > 150 || phone.length > 50 || (reason && reason.length > 500)) {
+      return NextResponse.json({ error: 'Longitud de campos excedida' }, { status: 400 });
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json({ error: 'Formato de correo inválido' }, { status: 400 });
+    }
+
     // Para obtener la URL base real donde estamos (ej: http://localhost:3000 o https://mentis.cl)
     const origin = request.headers.get('origin') || 'http://localhost:3000';
 
@@ -51,7 +60,8 @@ export async function POST(request: Request) {
     const data = await response.json();
 
     if (!response.ok) {
-      console.error("Error desde Ventipay:", data);
+      // Prevención Data Leakage: evitamos imprimir "data" completo que podría tener información interna
+      console.error("Error desde Ventipay: Fallo al comunicarse con la pasarela.");
       return NextResponse.json({ error: 'Error al comunicarse con la pasarela de pagos' }, { status: 500 });
     }
 
@@ -69,7 +79,8 @@ export async function POST(request: Request) {
     return nextResponse;
 
   } catch (error) {
-    console.error("Error interno en checkout:", error);
+    // Prevención Data Leakage
+    console.error("Error interno en checkout:", error instanceof Error ? error.message : 'Error desconocido');
     return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
   }
 }

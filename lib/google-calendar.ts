@@ -80,7 +80,7 @@ export async function createCalendarEvent({
 
     return response.data;
   } catch (error) {
-    console.error('Error al crear el evento en Calendar:', error);
+    console.error('Error al crear el evento en Calendar:', error instanceof Error ? error.message : 'Error desconocido');
     throw error;
   }
 }
@@ -116,7 +116,7 @@ export async function getBusySlots(timeMin: Date, timeMax: Date) {
       };
     });
   } catch (error) {
-    console.error('Error al obtener la disponibilidad de Calendar:', error);
+    console.error('Error al obtener la disponibilidad de Calendar:', error instanceof Error ? error.message : 'Error desconocido');
     throw error;
   }
 }

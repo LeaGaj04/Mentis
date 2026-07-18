@@ -3,6 +3,15 @@ import { cookies } from 'next/headers';
 import { Resend } from 'resend';
 import { createCalendarEvent } from '../../../lib/google-calendar';
 
+function escapeHtml(unsafe: any) {
+  return (unsafe || '').toString()
+       .replace(/&/g, "&amp;")
+       .replace(/</g, "&lt;")
+       .replace(/>/g, "&gt;")
+       .replace(/"/g, "&quot;")
+       .replace(/'/g, "&#039;");
+}
+
 async function handlePaymentSuccess(request: Request) {
   const { searchParams } = new URL(request.url);
   const cookieStore = cookies();
@@ -46,7 +55,7 @@ async function handlePaymentSuccess(request: Request) {
     const checkout = await ventipayRes.json();
 
     if (!ventipayRes.ok) {
-      console.error("Error obteniendo checkout desde Ventipay:", checkout);
+      console.error("Error obteniendo checkout desde Ventipay: Fallo de validación del lado de VentiPay.");
       return NextResponse.redirect(new URL('/agendar?error=ventipay_error', request.url), 303);
     }
 
@@ -89,16 +98,16 @@ async function handlePaymentSuccess(request: Request) {
           </div>
           
           <div style="background-color: #f4f7f4; padding: 30px; border-radius: 12px; margin-bottom: 30px;">
-            <h2 style="color: #2b392b; margin-top: 0;">¡Hola ${name}!</h2>
+            <h2 style="color: #2b392b; margin-top: 0;">¡Hola ${escapeHtml(name)}!</h2>
             <p style="font-size: 16px; line-height: 1.5;">
               Hemos recibido tu pago exitosamente. Tu sesión ya se encuentra confirmada y agendada en el sistema.
             </p>
             
             <div style="background-color: #ffffff; padding: 20px; border-radius: 8px; margin: 25px 0;">
               <h3 style="color: #4b694b; margin-top: 0; margin-bottom: 15px;">Detalles de tu sesión:</h3>
-              <p style="margin: 5px 0;"><strong>Fecha:</strong> ${date}</p>
-              <p style="margin: 5px 0;"><strong>Hora:</strong> ${time}</p>
-              ${reason ? `<p style="margin: 5px 0;"><strong>Motivo de consulta:</strong> ${reason}</p>` : ''}
+              <p style="margin: 5px 0;"><strong>Fecha:</strong> ${escapeHtml(date)}</p>
+              <p style="margin: 5px 0;"><strong>Hora:</strong> ${escapeHtml(time)}</p>
+              ${reason ? `<p style="margin: 5px 0;"><strong>Motivo de consulta:</strong> ${escapeHtml(reason)}</p>` : ''}
               ${meetLink ? `<div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e2e8f0;">
                 <p style="margin: 0 0 5px 0;"><strong>Enlace de tu videollamada:</strong></p>
                 <a href="${meetLink}" style="color: #2b392b; font-weight: bold; text-decoration: underline; word-break: break-all;">${meetLink}</a>
@@ -106,7 +115,7 @@ async function handlePaymentSuccess(request: Request) {
             </div>
             
             <p style="font-size: 15px; line-height: 1.5; color: #64748b;">
-              ${meetLink ? `El enlace ya está incluido arriba. Puedes usarlo a la hora acordada.` : `Pronto te contactaremos a través de tu correo o teléfono registrado (${phone}) para enviarte el enlace seguro de la videollamada.`}
+              ${meetLink ? `El enlace ya está incluido arriba. Puedes usarlo a la hora acordada.` : `Pronto te contactaremos a través de tu correo o teléfono registrado (${escapeHtml(phone)}) para enviarte el enlace seguro de la videollamada.`}
             </p>
           </div>
           
@@ -121,7 +130,7 @@ async function handlePaymentSuccess(request: Request) {
     return NextResponse.redirect(new URL('/agendar/exito', request.url), 303);
 
   } catch (error) {
-    console.error("Error crítico en payment-success:", error);
+    console.error("Error crítico en payment-success:", error instanceof Error ? error.message : 'Error desconocido');
     return NextResponse.redirect(new URL('/agendar?error=server_error', request.url), 303);
   }
 }
