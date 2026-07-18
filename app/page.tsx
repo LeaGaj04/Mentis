@@ -11,11 +11,11 @@ export default function Home() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-12 lg:gap-8 max-w-7xl mx-auto">
             
             {/* Left Column: Main Hero Card */}
-            <div className="w-full md:w-7/12 bg-white/40 backdrop-blur-xl border border-white/60 rounded-[3rem] p-8 md:p-14 shadow-2xl text-left">
-              <span className="inline-block bg-white/80 backdrop-blur-sm text-olive-700 px-4 py-2 rounded-full text-sm font-semibold mb-8 shadow-sm">
+            <div className="w-full md:w-7/12 bg-white/40 backdrop-blur-xl border border-white/60 rounded-3xl md:rounded-[3rem] p-6 sm:p-8 md:p-14 shadow-2xl text-left">
+              <span className="inline-block bg-white/80 backdrop-blur-sm text-olive-700 px-4 py-2 rounded-full text-xs sm:text-sm font-semibold mb-6 sm:mb-8 shadow-sm">
                 Atención Psicológica 100% Online
               </span>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-olive-900 tracking-tight mb-6 leading-[1.1]">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-olive-900 tracking-tight mb-4 sm:mb-6 leading-[1.15] md:leading-[1.1]">
                 Un espacio seguro <br className="hidden md:block" />
                 para tu <span className="text-olive-600 border-b-4 border-olive-400/50 pb-1">bienestar mental</span>, <br className="hidden md:block" />
                 desde casa.
@@ -213,10 +213,10 @@ export default function Home() {
       </section>
       
       {/* Final CTA */}
-      <section className="w-full py-24 bg-cream-50 relative z-10 text-center">
+      <section className="w-full py-16 md:py-24 bg-cream-50 relative z-10 text-center">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto bg-white/40 backdrop-blur-xl border border-white/60 p-12 rounded-[3rem] shadow-2xl">
-            <h2 className="text-2xl md:text-3xl font-bold text-olive-900 mb-8">¿Listo/a para dar el primer paso?</h2>
+          <div className="max-w-3xl mx-auto bg-white/40 backdrop-blur-xl border border-white/60 p-6 sm:p-8 md:p-12 rounded-3xl md:rounded-[3rem] shadow-2xl">
+            <h2 className="text-2xl md:text-3xl font-bold text-olive-900 mb-6 md:mb-8">¿Listo/a para dar el primer paso?</h2>
             <Link
               href="/agendar"
               className="inline-flex items-center justify-center px-8 py-4 bg-olive-700 text-white rounded-full font-bold shadow-md hover:bg-olive-800 transition-colors gap-2 group"

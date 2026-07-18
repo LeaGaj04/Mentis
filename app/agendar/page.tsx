@@ -155,15 +155,15 @@ function AgendarContent() {
   }
 
   return (
-    <div className="min-h-screen py-12 px-4 relative z-10">
-      <div className="max-w-5xl mx-auto bg-white/60 backdrop-blur-2xl rounded-[3rem] shadow-2xl border border-white/60 overflow-hidden flex flex-col md:flex-row">
+    <div className="min-h-screen py-8 md:py-12 px-4 relative z-10">
+      <div className="max-w-5xl mx-auto bg-white/60 backdrop-blur-2xl rounded-3xl md:rounded-[3rem] shadow-2xl border border-white/60 overflow-hidden flex flex-col md:flex-row">
         
         {/* Panel Izquierdo: Selección de Hora y Calendario */}
-        <div className="w-full md:w-6/12 bg-olive-900/80 backdrop-blur-xl text-white p-6 md:p-8 flex flex-col items-center border-r border-white/20">
+        <div className="w-full md:w-6/12 bg-olive-900/80 backdrop-blur-xl text-white p-6 md:p-8 flex flex-col items-center border-b md:border-b-0 md:border-r border-white/20">
           <h2 className="text-2xl font-bold mb-2 w-full text-left">Selecciona tu hora</h2>
           <p className="text-olive-200 text-sm mb-6 w-full text-left">Elige el momento que mejor se adapte a tu rutina.</p>
           
-          <div className="bg-white/90 backdrop-blur-md text-slate-800 p-4 rounded-3xl shadow-inner mb-6 w-full flex justify-center">
+          <div className="bg-white/90 backdrop-blur-md text-slate-800 p-2 sm:p-4 rounded-2xl sm:rounded-3xl shadow-inner mb-6 w-full flex justify-center overflow-x-auto">
              <DayPicker
                 mode="single"
                 selected={selectedDay}
@@ -234,7 +234,7 @@ function AgendarContent() {
         </div>
 
         {/* Panel Derecho: Formulario */}
-        <div className="w-full md:w-6/12 p-8 md:p-10">
+        <div className="w-full md:w-6/12 p-6 md:p-10">
           <h2 className="text-2xl font-bold text-olive-900 mb-6">Tus Datos</h2>
           
           {status === 'error' && (
@@ -251,7 +251,7 @@ function AgendarContent() {
                 type="text"
                 id="name"
                 required
-                className="w-full px-4 py-3 rounded-xl border border-white/50 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none transition-shadow"
+                className="w-full px-4 py-3 rounded-xl border border-olive-800 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none transition-shadow"
                 value={formData.name}
                 onChange={e => setFormData({ ...formData, name: e.target.value })}
               />
@@ -264,7 +264,7 @@ function AgendarContent() {
                   type="email"
                   id="email"
                   required
-                  className="w-full px-4 py-3 rounded-xl border border-white/50 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none transition-shadow"
+                  className="w-full px-4 py-3 rounded-xl border border-olive-800 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none transition-shadow"
                   value={formData.email}
                   onChange={e => setFormData({ ...formData, email: e.target.value })}
                 />
@@ -275,7 +275,7 @@ function AgendarContent() {
                   type="tel"
                   id="phone"
                   required
-                  className="w-full px-4 py-3 rounded-xl border border-white/50 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none transition-shadow"
+                  className="w-full px-4 py-3 rounded-xl border border-olive-800 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none transition-shadow"
                   value={formData.phone}
                   onChange={e => setFormData({ ...formData, phone: e.target.value })}
                 />
@@ -287,7 +287,7 @@ function AgendarContent() {
               <textarea
                 id="reason"
                 rows={4}
-                className="w-full px-4 py-3 rounded-xl border border-white/50 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none transition-shadow resize-none"
+                className="w-full px-4 py-3 rounded-xl border border-olive-800 bg-white/50 backdrop-blur-sm focus:ring-2 focus:ring-olive-500 focus:border-olive-500 outline-none transition-shadow resize-none"
                 value={formData.reason}
                 onChange={e => setFormData({ ...formData, reason: e.target.value })}
                 placeholder="Cuéntame brevemente qué te trae por aquí..."
