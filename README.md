@@ -15,7 +15,7 @@
 
 **Mentis** es una plataforma web Full-Stack moderna, empática y altamente estética, diseñada para facilitar el acceso a servicios de psicología clínica online. Construida sobre el ecosistema de Next.js, la aplicación ofrece una experiencia de usuario impecable y sin fricciones, respaldada por un sistema de backend robusto para la automatización de citas.
 
-El proyecto se encuentra **100% funcional**, gestionando de forma segura el ciclo completo de reservas: desde la captura de datos en el cliente hasta el envío de correos transaccionales y la generación de salas virtuales, todo procesado del lado del servidor (SSR) para garantizar rendimiento y seguridad.
+El proyecto se encuentra **100% funcional**, gestionando de forma segura el ciclo completo de reservas: desde la captura de datos en el cliente hasta el envío de correos transaccionales con datos y la generación de salas virtuales, todo procesado del lado del servidor (SSR) para garantizar rendimiento y seguridad para los usuarios.
 
 ---
 
