@@ -101,10 +101,10 @@ El proyecto sigue la arquitectura recomendada por Next.js (App Router), separand
    │   │   └── Header.tsx
    │   │
    │   └── lib/              # Funciones de utilidad y clientes externos
-   │       ├── google.ts     # Configuracion y auth de Google Workspace/Meet
+   │       ├── google.ts     # Configuracion y auth de Google Meet
    │       └── utils.ts      # Funciones auxiliares generales
    │
-   ├── .env.local            # Variables de entorno secretas (ignorado en git)
+   ├── .env.                 # Variables de entorno secretas (ignorado en git)
    ├── next.config.ts        # Configuracion general de Next.js
    ├── package.json          # Dependencias y scripts de ejecucion
    └── tailwind.config.ts    # Configuracion del sistema de diseño
